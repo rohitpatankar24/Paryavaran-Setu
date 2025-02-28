@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Waste</title>
+    <link rel="stylesheet" href="report.css">
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // if (!isUserLoggedIn()) {
+            //     window.location.href = "/signin.html"; // Redirect if not logged in
+            //     return;
+            // }
+
+            // Auto-fill username
+            // document.getElementById("username").value = localStorage.getItem("username");
+
+            // Auto-detect location and convert to address
+            document.getElementById("locateBtn").addEventListener("click", function () {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(async function (position) {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        document.getElementById("location").value = `Lat:${lat}, Long: ${lon}`;
+
+                        // Convert lat/lon to a readable address
+                        const address = await getAddressFromCoordinates(lat, lon);
+                        if (address) {
+                            document.getElementById("location").value = address;
+                        }
+                    }, function () {
+                        alert("Location access denied or unavailable.");
+                    });
+                } else {
+                    alert("Geolocation is not supported by your browser.");
+                }
+            });
+
+            function isUserLoggedIn() {
+                return localStorage.getItem("isLoggedIn") === "true";
+            }
+        });
+
+        async function getAddressFromCoordinates(lat, lon) {
+            const apiKey = "YOUR_GOOGLE_MAPS_API_KEY"; // Replace with your API Key
+            const url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lon}&key=${apiKey}";
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                if (data.status === "OK") {
+                    return data.results[0].formatted_address; // Extract full address
+                } else {
+                    alert("Unable to fetch address.");
+                    return null;
+                }
+            } catch (error) {
+                alert("Error fetching address.");
+                console.error(error);
+                return null;
+            }
+        }
+
+        function submitReport() {
+            const username = document.getElementById("username").value;
+            const description = document.getElementById("description").value;
+            const location = document.getElementById("location").value;
+            const photo = document.getElementById("photo").files[0];
+
+            if (!photo) {
+                alert("Please upload a photo.");
+                return;
+            }
+
+            // Simulating form submission
+            // alert(Report submitted!\nUsername: ${username}\nDescription: ${description}\nLocation: ${location});
+        }
+
+        function signOut() {
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("username");
+            alert("You have been signed out.");
+            window.location.href = "/index.html"; // Redirect to the main website
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>Report Waste</h2>
+        <button class="signout-btn" onclick="signOut()">Sign Out</button>
+        <form id="reportForm">
+
+            <label>Upload Photo:</label>
+            <input type="file" id="photo" accept="image/*" capture="user">
+
+            <label>Description (optional):</label>
+            <textarea id="description" placeholder="Add details..."></textarea>
+
+            <label>Location:</label>
+            <div class="location-box">
+                <input type="text" id="location" placeholder="Enter manually">
+                <button type="button" id="locateBtn">Auto Detect</button>
+            </div>
+
+            <button type="button" onclick="submitReport()">Submit Report</button>
+        </form>
+    </div>
+</body>
+</html>
