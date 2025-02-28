@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Paryaran Setu-sign-Up</title>
+    <link rel="stylesheet" href="signup.css" />
+    <script>
+      function redirectToSignin() {
+        window.location.href = "signin.html";
+      }
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <img src="signinlogo.jpg" alt="Paryavaran Setu Logo" class="logo" />
+      <h2>Create An Account</h2>
+      <p>Have an account?
+        <a onclick="redirectToSignin()">
+        Sign In</a>
+      </p>
+      <form>
+        <input type="text" placeholder="Enter Full Name" id="username" pattern="[a-z]" required />
+        <input type="email" placeholder="Enter Email Address" id="email" required />
+        <input type="tel" placeholder="Enter Mobile" id="email" pattern="[0-9]{10}" required />
+        <input type="password" placeholder="Enter Password" required />
+        <select name="select Your Role" id="role" required>
+          <option value="" class="options">Select Your Role</option>
+          <option value="Collector" class="options">Trash-Collector</option>
+          <option value="Resident" class="options">Resident</option>
+        </select>
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  </body>
+</html>
